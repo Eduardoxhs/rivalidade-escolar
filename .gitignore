@@ -1,0 +1,51 @@
+# ==========================================
+# GITIGNORE - Rivalidade Escolar
+# ==========================================
+
+# Python
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+
+# SQLite / Bancos Locais
+bd/*.db
+bd/*.sqlite
+bd/*.sqlite3
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js / Front-End
+node_modules/
+dist/
+build/
+.npm
+.vite
+
+# Logs e Cobertura
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

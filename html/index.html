@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rivalidade Escolar - Quizz EXPOCEEP 2026</title>
+  
+  <!-- Estilos visuais modernos (Tailwind CSS via CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Efeito de confetes ao vencer -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col">
+
+  <!-- ========================================== -->
+  <!-- 1. BARRA SUPERIOR (HEADER / NAVBAR)       -->
+  <!-- ========================================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <!-- Logo e Título -->
+      <a href="index.html" class="flex items-center gap-2.5 cursor-pointer">
+        <div class="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+          🏆
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight text-slate-900">RIVALIDADE ESCOLAR</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-bold text-orange-700 bg-orange-100 rounded">EXPOCEEP 2026</span>
+          </div>
+          <p class="text-xs text-slate-500">Quizz entre Turmas do CEEP</p>
+        </div>
+      </a>
+
+      <!-- Menu de Navegação -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-600 text-white">
+          🎯 Quizz
+        </a>
+        <a href="ranking.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">
+          🏆 Ranking
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. CONTEÚDO PRINCIPAL (MAIN)               -->
+  <!-- ========================================== -->
+  <main class="flex-1 py-8 px-4 max-w-xl mx-auto w-full">
+
+    <!-- TELA 1: FORMULÁRIO INICIAL (IDENTIFICAÇÃO DO ALUNO) -->
+    <section id="tela-inicio" class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+      <div class="text-center mb-6">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-2">
+          ✨ Desafio Escolar 2026
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Quizz Entre Turmas</h1>
+        <p class="text-sm text-slate-600 mt-1">Responda às questões, ganhe pontos e ajude sua turma a liderar o placar!</p>
+      </div>
+
+      <form id="form-inicio" class="space-y-5">
+        <!-- Campo: Nome do Aluno -->
+        <div>
+          <label for="nome-aluno" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            Seu Nome ou Apelido
+          </label>
+          <input 
+            type="text" 
+            id="nome-aluno" 
+            required
+            placeholder="Ex: Lucas Silva" 
+            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium"
+          >
+        </div>
+
+        <!-- Campo: Seleção da Turma -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+            Escolha a sua Turma ou Categoria
+          </label>
+          <select 
+            id="select-turma" 
+            class="w-full px-3.5 py-3 rounded-xl border border-slate-300 text-sm font-semibold bg-white text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500 cursor-pointer"
+          >
+            <!-- As 41 opções agrupadas são geradas pelo JavaScript -->
+          </select>
+          <p class="text-[11px] text-slate-500 mt-1">
+            Disponível do 1º ao 3º ano (A ao M), Visitantes e Avaliadores.
+          </p>
+        </div>
+
+        <!-- Destaque Quizz Unificado -->
+        <div class="p-3 rounded-xl bg-orange-50 border border-orange-200 flex items-center gap-3">
+          <span class="text-2xl">🧠</span>
+          <div class="text-xs text-orange-950">
+            <strong class="block font-bold">Quizz Unificado: Lógica & Matemática</strong>
+            5 perguntas dinâmicas sorteadas de raciocínio rápido para pontuar no ranking!
+          </div>
+        </div>
+
+        <!-- Botão Iniciar -->
+        <button 
+          type="submit" 
+          class="w-full py-3.5 px-6 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-base shadow-sm transition cursor-pointer"
+        >
+          Começar o Quizz agora 🚀
+        </button>
+      </form>
+    </section>
+
+    <!-- TELA 2: PERGUNTA ATUAL DO QUIZZ (INICIALMENTE OCULTA) -->
+    <section id="tela-jogo" class="hidden bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+      <!-- Progresso -->
+      <div>
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+          <span>Pergunta <strong id="numero-pergunta" class="text-slate-900">1</strong> de <strong id="total-perguntas">5</strong></span>
+          <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+            Pontuando para: <strong id="turma-ativa" class="text-orange-600">3°M</strong>
+          </span>
+        </div>
+        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div id="barra-progresso" class="h-full bg-orange-600 transition-all duration-300" style="width: 20%;"></div>
+        </div>
+      </div>
+
+      <!-- Enunciado -->
+      <div class="py-2">
+        <h2 id="enunciado-pergunta" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+          Carregando pergunta...
+        </h2>
+      </div>
+
+      <!-- Alternativas -->
+      <div id="container-alternativas" class="space-y-2.5">
+        <!-- Inseridas via JavaScript -->
+      </div>
+
+      <!-- Feedback de Resposta -->
+      <div id="feedback-resposta" class="hidden p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1">
+        <strong id="feedback-titulo" class="block text-sm"></strong>
+        <p id="feedback-explicacao"></p>
+      </div>
+
+      <!-- Botão Próxima -->
+      <button 
+        id="btn-proxima" 
+        class="hidden w-full py-3 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm cursor-pointer transition"
+      >
+        Próxima Pergunta ➔
+      </button>
+    </section>
+
+    <!-- TELA 3: RESULTADO FINAL DO QUIZZ (INICIALMENTE OCULTA) -->
+    <section id="tela-resultado" class="hidden bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center space-y-5">
+      <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mx-auto text-3xl">
+        🏆
+      </div>
+
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-orange-600">Quizz Concluído!</span>
+        <h2 id="resultado-aluno" class="text-2xl font-extrabold text-slate-900 mt-1">Parabéns!</h2>
+        <p class="text-sm text-slate-600 mt-1">
+          Você representou a turma <strong id="resultado-turma" class="text-slate-900">3°M</strong>.
+        </p>
+      </div>
+
+      <!-- Placar de Acertos e Pontos -->
+      <div class="grid grid-cols-2 gap-3 py-2">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-xs text-slate-500 block">Acertos</span>
+          <span id="resultado-acertos" class="text-2xl font-extrabold text-slate-900">0 / 5</span>
+        </div>
+        <div class="p-4 rounded-xl bg-orange-50 border border-orange-200">
+          <span class="text-xs text-orange-600 font-bold block">Pontos Somados</span>
+          <span id="resultado-pontos" class="text-2xl font-extrabold text-orange-700">+0 XP</span>
+        </div>
+      </div>
+
+      <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+        Esses pontos foram somados ao placar da sua turma no Ranking Geral!
+      </p>
+
+      <!-- Botões de Ação -->
+      <div class="space-y-2 pt-2">
+        <a 
+          href="ranking.html" 
+          class="block w-full py-3 px-4 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-sm transition text-center"
+        >
+          🏆 Ver Ranking Geral das Turmas
+        </a>
+
+        <button 
+          id="btn-jogar-novamente" 
+          class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition cursor-pointer"
+        >
+          🔄 Jogar Outro Quizz
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. RODAPÉ (FOOTER)                         -->
+  <!-- ========================================== -->
+  <footer class="mt-auto py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto px-4 space-y-1">
+      <p class="font-semibold text-slate-700">🏆 Rivalidade Escolar — Plataforma de Quizz entre Turmas</p>
+      <p>Projeto Integrador • EXPOCEEP 2026 • CEEP Pedro Boaretto Neto • Cascavel - PR</p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 4. SCRIPT JAVASCRIPT (LÓGICA DO JOGO)      -->
+  <!-- ========================================== -->
+  <script>
+    // --- LISTA COMPLETA DE TURMAS DO CEEP: 1º, 2º e 3º ANO (A ao M), VISITANTES E AVALIADOR ---
+    const TURMAS_INICIAIS = [
+      // 1º Ano (A ao M)
+      { id: 1, nome: '1°A', curso: '1º Ano do Ensino Médio', pontos: 420 },
+      { id: 2, nome: '1°B', curso: '1º Ano do Ensino Médio', pontos: 310 },
+      { id: 3, nome: '1°C', curso: '1º Ano do Ensino Médio', pontos: 260 },
+      { id: 4, nome: '1°D', curso: '1º Ano do Ensino Médio', pontos: 180 },
+      { id: 5, nome: '1°E', curso: '1º Ano do Ensino Médio', pontos: 240 },
+      { id: 6, nome: '1°F', curso: '1º Ano do Ensino Médio', pontos: 150 },
+      { id: 7, nome: '1°G', curso: '1º Ano do Ensino Médio', pontos: 200 },
+      { id: 8, nome: '1°H', curso: '1º Ano do Ensino Médio', pontos: 170 },
+      { id: 9, nome: '1°I', curso: '1º Ano do Ensino Médio', pontos: 130 },
+      { id: 10, nome: '1°J', curso: '1º Ano do Ensino Médio', pontos: 190 },
+      { id: 11, nome: '1°K', curso: '1º Ano do Ensino Médio', pontos: 160 },
+      { id: 12, nome: '1°L', curso: '1º Ano do Ensino Médio', pontos: 140 },
+      { id: 13, nome: '1°M', curso: '1º Ano do Ensino Médio', pontos: 380 },
+      // 2º Ano (A ao M)
+      { id: 14, nome: '2°A', curso: '2º Ano do Ensino Médio', pontos: 540 },
+      { id: 15, nome: '2°B', curso: '2º Ano do Ensino Médio', pontos: 470 },
+      { id: 16, nome: '2°C', curso: '2º Ano do Ensino Médio', pontos: 390 },
+      { id: 17, nome: '2°D', curso: '2º Ano do Ensino Médio', pontos: 330 },
+      { id: 18, nome: '2°E', curso: '2º Ano do Ensino Médio', pontos: 410 },
+      { id: 19, nome: '2°F', curso: '2º Ano do Ensino Médio', pontos: 290 },
+      { id: 20, nome: '2°G', curso: '2º Ano do Ensino Médio', pontos: 360 },
+      { id: 21, nome: '2°H', curso: '2º Ano do Ensino Médio', pontos: 310 },
+      { id: 22, nome: '2°I', curso: '2º Ano do Ensino Médio', pontos: 270 },
+      { id: 23, nome: '2°J', curso: '2º Ano do Ensino Médio', pontos: 350 },
+      { id: 24, nome: '2°K', curso: '2º Ano do Ensino Médio', pontos: 300 },
+      { id: 25, nome: '2°L', curso: '2º Ano do Ensino Médio', pontos: 280 },
+      { id: 26, nome: '2°M', curso: '2º Ano do Ensino Médio', pontos: 680 },
+      // 3º Ano (A ao M)
+      { id: 27, nome: '3°A', curso: '3º Ano do Ensino Médio', pontos: 950 },
+      { id: 28, nome: '3°B', curso: '3º Ano do Ensino Médio', pontos: 820 },
+      { id: 29, nome: '3°C', curso: '3º Ano do Ensino Médio', pontos: 610 },
+      { id: 30, nome: '3°D', curso: '3º Ano do Ensino Médio', pontos: 530 },
+      { id: 31, nome: '3°E', curso: '3º Ano do Ensino Médio', pontos: 670 },
+      { id: 32, nome: '3°F', curso: '3º Ano do Ensino Médio', pontos: 490 },
+      { id: 33, nome: '3°G', curso: '3º Ano do Ensino Médio', pontos: 580 },
+      { id: 34, nome: '3°H', curso: '3º Ano do Ensino Médio', pontos: 520 },
+      { id: 35, nome: '3°I', curso: '3º Ano do Ensino Médio', pontos: 450 },
+      { id: 36, nome: '3°J', curso: '3º Ano do Ensino Médio', pontos: 600 },
+      { id: 37, nome: '3°K', curso: '3º Ano do Ensino Médio', pontos: 480 },
+      { id: 38, nome: '3°L', curso: '3º Ano do Ensino Médio', pontos: 460 },
+      { id: 39, nome: '3°M', curso: '3º Ano do Ensino Médio', pontos: 1200 },
+      // Especiais
+      { id: 40, nome: 'Visitantes', curso: 'Comunidade & Convidados da EXPOCEEP', pontos: 510 },
+      { id: 41, nome: 'Avaliador', curso: 'Banca Avaliadora & Professores', pontos: 730 }
+    ];
+
+    // Carrega turmas salvas no navegador (localStorage)
+    function obterTurmas() {
+      const salvo = localStorage.getItem('rivalidade_turmas_v2');
+      if (salvo) {
+        try { 
+          const parsed = JSON.parse(salvo);
+          if (Array.isArray(parsed) && parsed.length === TURMAS_INICIAIS.length) return parsed;
+        } catch(e) {}
+      }
+      return TURMAS_INICIAIS;
+    }
+
+    // Salva turmas no navegador
+    function salvarTurmas(turmas) {
+      localStorage.setItem('rivalidade_turmas_v2', JSON.stringify(turmas));
+    }
+
+    // --- BANCO COM 30 PERGUNTAS DE RACIOCÍNIO LÓGICO E MATEMÁTICA RÁPIDA ---
+    const BANCO_PERGUNTAS = [
+      // Raciocínio Lógico & Desafios Mentais
+      {
+        categoria: 'logica',
+        enunciado: 'Em uma corrida de rua, você ultrapassa o competidor que estava em 2º lugar. Em qual posição você fica?',
+        alternativas: [
+          { letra: 'A', texto: '1º lugar' },
+          { letra: 'B', texto: '2º lugar' },
+          { letra: 'C', texto: '3º lugar' },
+          { letra: 'D', texto: '4º lugar' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Ao ultrapassar quem estava em 2º lugar, você assume o posto dele, ficando em 2º lugar!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Se 3 gatos caçam 3 ratos em 3 minutos, quanto tempo 100 gatos levam para caçar 100 ratos trabalhando juntos?',
+        alternativas: [
+          { letra: 'A', texto: '100 minutos' },
+          { letra: 'B', texto: '3 minutos' },
+          { letra: 'C', texto: '30 minutos' },
+          { letra: 'D', texto: '1 minuto' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Cada gato leva 3 minutos para caçar 1 rato. Em paralelo, 100 gatos caçam 100 ratos nos mesmos 3 minutos!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Um tijolo pesa 1 kg mais meio tijolo. Quanto pesa 1 tijolo inteiro?',
+        alternativas: [
+          { letra: 'A', texto: '1,5 kg' },
+          { letra: 'B', texto: '2 kg' },
+          { letra: 'C', texto: '3 kg' },
+          { letra: 'D', texto: '2,5 kg' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Se 1 tijolo = 1 kg + meio tijolo, então o meio tijolo que falta pesa 1 kg. Logo, o tijolo inteiro pesa 2 kg.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Qual número completa a sequência lógica: 2, 6, 12, 20, 30, ... ?',
+        alternativas: [
+          { letra: 'A', texto: '40' },
+          { letra: 'B', texto: '42' },
+          { letra: 'C', texto: '36' },
+          { letra: 'D', texto: '44' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'As diferenças aumentam de 2 em 2: +4, +6, +8, +10, e a próxima é +12 (30 + 12 = 42).',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Em uma gaveta no escuro há 10 meias pretas e 10 meias azuis soltas. Qual o número MÍNIMO de meias que você deve retirar para garantir 1 par da mesma cor?',
+        alternativas: [
+          { letra: 'A', texto: '11 meias' },
+          { letra: 'B', texto: '3 meias' },
+          { letra: 'C', texto: '2 meias' },
+          { letra: 'D', texto: '5 meias' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Se pegar 2, podem ser 1 preta e 1 azul. A 3ª meia obrigatoriamente fará par com uma das duas!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Se amanhã for quarta-feira, que dia da semana foi anteontem?',
+        alternativas: [
+          { letra: 'A', texto: 'Domingo' },
+          { letra: 'B', texto: 'Segunda-feira' },
+          { letra: 'C', texto: 'Sábado' },
+          { letra: 'D', texto: 'Terça-feira' }
+        ],
+        resposta_correta: 'A',
+        explicacao: 'Se amanhã é quarta, hoje é terça. Ontem foi segunda e anteontem foi domingo!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Um caracol sobe um muro de 10 metros. De dia sobe 3 metros e de noite desce 2 metros. Em quantos dias chega ao topo?',
+        alternativas: [
+          { letra: 'A', texto: '10 dias' },
+          { letra: 'B', texto: '8 dias' },
+          { letra: 'C', texto: '7 dias' },
+          { letra: 'D', texto: '9 dias' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'No final do 7º dia ele está na marca de 7 metros. No 8º dia, sobe 3 metros e atinge os 10 metros no topo sem escorregar!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Cinco amigos se encontram e todos apertam as mãos entre si exatamente uma vez. Quantos apertos de mão aconteceram?',
+        alternativas: [
+          { letra: 'A', texto: '25' },
+          { letra: 'B', texto: '10' },
+          { letra: 'C', texto: '20' },
+          { letra: 'D', texto: '15' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Combinação de 5 tomados 2 a 2: (5 x 4) / 2 = 10 apertos de mão.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Qual número completa a sequência lógica dos quadrados: 1, 4, 9, 16, 25, ... ?',
+        alternativas: [
+          { letra: 'A', texto: '30' },
+          { letra: 'B', texto: '36' },
+          { letra: 'C', texto: '32' },
+          { letra: 'D', texto: '49' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'São os quadrados perfeitos: 1² = 1, 2² = 4, 3² = 9, 4² = 16, 5² = 25, e o próximo é 6² = 36.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Três pessoas entram em um restaurante: dois pais e dois filhos. Cada um pediu 1 lanche e a conta veio com exatamente 3 lanches. Como?',
+        alternativas: [
+          { letra: 'A', texto: 'O caixa errou' },
+          { letra: 'B', texto: 'São avô, pai e filho' },
+          { letra: 'C', texto: 'Um não comeu' },
+          { letra: 'D', texto: 'Pediram combo' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'O avô é pai, o pai é filho do avô e pai do filho. São 3 pessoas que somam dois pais e dois filhos!',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Uma vela inteira queima em 60 minutos. Se você acender as DUAS pontas da vela ao mesmo tempo, em quanto tempo ela queima?',
+        alternativas: [
+          { letra: 'A', texto: '60 minutos' },
+          { letra: 'B', texto: '30 minutos' },
+          { letra: 'C', texto: '15 minutos' },
+          { letra: 'D', texto: '45 minutos' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Queimando pelas duas pontas simultaneamente, a velocidade dobra e o tempo cai pela metade: 30 minutos.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Em uma família, cada um dos 4 irmãos homens tem exatamente 1 irmã mulher. Quantos filhos os pais têm ao todo?',
+        alternativas: [
+          { letra: 'A', texto: '8 filhos' },
+          { letra: 'B', texto: '5 filhos' },
+          { letra: 'C', texto: '6 filhos' },
+          { letra: 'D', texto: '4 filhos' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'São os 4 irmãos homens e 1 única irmã mulher, que é irmã de todos eles: 4 + 1 = 5 filhos.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Se você tem 5 caixas e dentro de cada uma há 2 caixas menores, quantas caixas existem no total?',
+        alternativas: [
+          { letra: 'A', texto: '10 caixas' },
+          { letra: 'B', texto: '15 caixas' },
+          { letra: 'C', texto: '12 caixas' },
+          { letra: 'D', texto: '7 caixas' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'As 5 caixas grandes mais as 10 caixas pequenas (5 x 2) = 15 caixas no total.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Complete a sequência lógica rápida: 3, 6, 12, 24, 48, ... Qual é o próximo número?',
+        alternativas: [
+          { letra: 'A', texto: '72' },
+          { letra: 'B', texto: '96' },
+          { letra: 'C', texto: '84' },
+          { letra: 'D', texto: '60' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Cada termo é o dobro do anterior: 48 x 2 = 96.',
+        pontos: 30
+      },
+      {
+        categoria: 'logica',
+        enunciado: 'Em uma balança de pratos, 3 maçãs equilibram exatamente 2 laranjas. Quantas laranjas equilibram 6 maçãs?',
+        alternativas: [
+          { letra: 'A', texto: '3 laranjas' },
+          { letra: 'B', texto: '4 laranjas' },
+          { letra: 'C', texto: '5 laranjas' },
+          { letra: 'D', texto: '6 laranjas' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Se o dobro de maçãs é colocado (3 x 2 = 6), é necessário o dobro de laranjas (2 x 2 = 4 laranjas).',
+        pontos: 30
+      },
+
+      // Matemática Rápida & Cálculo Mental
+      {
+        categoria: 'matematica',
+        enunciado: 'Quanto é 15% de 200 reais?',
+        alternativas: [
+          { letra: 'A', texto: 'R$ 25,00' },
+          { letra: 'B', texto: 'R$ 30,00' },
+          { letra: 'C', texto: 'R$ 20,00' },
+          { letra: 'D', texto: 'R$ 35,00' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '10% de 200 = R$ 20. 5% de 200 = R$ 10. Somando ambos: R$ 20 + R$ 10 = R$ 30,00.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Um casaco que custa R$ 80,00 está com 25% de desconto. Qual é o valor final a pagar?',
+        alternativas: [
+          { letra: 'A', texto: 'R$ 60,00' },
+          { letra: 'B', texto: 'R$ 55,00' },
+          { letra: 'C', texto: 'R$ 65,00' },
+          { letra: 'D', texto: 'R$ 70,00' }
+        ],
+        resposta_correta: 'A',
+        explicacao: '25% equivale a um quarto (1/4). 80 dividido por 4 = R$ 20 de desconto. 80 - 20 = R$ 60,00.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Se 4 cadernos iguais custam R$ 28,00 no total, quanto custam 7 desses mesmos cadernos?',
+        alternativas: [
+          { letra: 'A', texto: 'R$ 42,00' },
+          { letra: 'B', texto: 'R$ 49,00' },
+          { letra: 'C', texto: 'R$ 56,00' },
+          { letra: 'D', texto: 'R$ 35,00' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Cada caderno custa 28 / 4 = R$ 7,00. Logo, 7 cadernos custam 7 x 7 = R$ 49,00.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Qual é o resultado correto da expressão: 10 + 10 x 0 + 10 ?',
+        alternativas: [
+          { letra: 'A', texto: '0' },
+          { letra: 'B', texto: '20' },
+          { letra: 'C', texto: '10' },
+          { letra: 'D', texto: '30' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'A multiplicação é feita primeiro: 10 x 0 = 0. Depois a soma: 10 + 0 + 10 = 20.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Uma caixa d\'água de 500 litros está com 60% da sua capacidade preenchida. Quantos litros há nela?',
+        alternativas: [
+          { letra: 'A', texto: '250 litros' },
+          { letra: 'B', texto: '300 litros' },
+          { letra: 'C', texto: '350 litros' },
+          { letra: 'D', texto: '200 litros' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '10% de 500 = 50 litros. Multiplicando por 6: 50 x 6 = 300 litros.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Quantos minutos há no total em um período de 2 horas e 45 minutos?',
+        alternativas: [
+          { letra: 'A', texto: '145 minutos' },
+          { letra: 'B', texto: '165 minutos' },
+          { letra: 'C', texto: '150 minutos' },
+          { letra: 'D', texto: '175 minutos' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '2 horas têm 120 minutos (2 x 60). Somando 45 minutos: 120 + 45 = 165 minutos.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Uma sala retangular tem 12 metros de comprimento e 5 metros de largura. Qual é a sua ÁREA?',
+        alternativas: [
+          { letra: 'A', texto: '34 m²' },
+          { letra: 'B', texto: '60 m²' },
+          { letra: 'C', texto: '50 m²' },
+          { letra: 'D', texto: '17 m²' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'A área do retângulo é calculada multiplicando base por altura: 12 x 5 = 60 m².',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'E qual é o PERÍMETRO dessa mesma sala de 12 metros por 5 metros?',
+        alternativas: [
+          { letra: 'A', texto: '60 metros' },
+          { letra: 'B', texto: '34 metros' },
+          { letra: 'C', texto: '17 metros' },
+          { letra: 'D', texto: '24 metros' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'O perímetro é a soma de todos os lados: 12 + 12 + 5 + 5 = 34 metros.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Em uma sala com 40 alunos, 75% deles foram aprovados no teste. Quantos alunos foram aprovados?',
+        alternativas: [
+          { letra: 'A', texto: '25 alunos' },
+          { letra: 'B', texto: '30 alunos' },
+          { letra: 'C', texto: '32 alunos' },
+          { letra: 'D', texto: '28 alunos' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '75% equivale a três quartos (3/4). 40 dividido por 4 = 10; 10 x 3 = 30 alunos aprovados.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Qual é a raiz quadrada exata do número 144?',
+        alternativas: [
+          { letra: 'A', texto: '11' },
+          { letra: 'B', texto: '12' },
+          { letra: 'C', texto: '13' },
+          { letra: 'D', texto: '14' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '12 multiplicado por 12 resulta exatamente em 144.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Qual é o próximo número primo imediatamente após o número 13?',
+        alternativas: [
+          { letra: 'A', texto: '15' },
+          { letra: 'B', texto: '17' },
+          { letra: 'C', texto: '19' },
+          { letra: 'D', texto: '14' }
+        ],
+        resposta_correta: 'B',
+        explicacao: '14, 15 e 16 têm múltiplos. O número 17 só é divisível por 1 e por ele mesmo (é primo).',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Se 5 pedreiros constroem um muro em 6 dias, em quantos dias 10 pedreiros (mesmo ritmo) fariam o mesmo muro?',
+        alternativas: [
+          { letra: 'A', texto: '12 dias' },
+          { letra: 'B', texto: '3 dias' },
+          { letra: 'C', texto: '4 dias' },
+          { letra: 'D', texto: '5 dias' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Regra de três inversa: dobrando o número de trabalhadores, o tempo cai pela metade: 6 / 2 = 3 dias.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Ao lançar um dado comum de 6 faces, qual é a probabilidade de tirar um número PAR (2, 4 ou 6)?',
+        alternativas: [
+          { letra: 'A', texto: '1 em 6 (16%)' },
+          { letra: 'B', texto: '3 em 6 (50%)' },
+          { letra: 'C', texto: '2 em 6 (33%)' },
+          { letra: 'D', texto: '4 em 6 (66%)' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Há 3 números pares em 6 faces possíveis: 3/6 = 1/2 = 50%.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Quanto é a terça parte de 90 somada com a metade de 40?',
+        alternativas: [
+          { letra: 'A', texto: '45' },
+          { letra: 'B', texto: '50' },
+          { letra: 'C', texto: '55' },
+          { letra: 'D', texto: '40' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Terça parte de 90 (90 / 3 = 30) + metade de 40 (40 / 2 = 20): 30 + 20 = 50.',
+        pontos: 30
+      },
+      {
+        categoria: 'matematica',
+        enunciado: 'Uma pizza foi fatiada em 8 pedaços iguais. Se você comeu 2 pedaços, que fração da pizza ainda SOBROU?',
+        alternativas: [
+          { letra: 'A', texto: '1/4' },
+          { letra: 'B', texto: '3/4' },
+          { letra: 'C', texto: '1/2' },
+          { letra: 'D', texto: '5/8' }
+        ],
+        resposta_correta: 'B',
+        explicacao: 'Sobraram 6 pedaços de 8 (6/8). Simplificando por 2, a fração é 3/4 (75% da pizza).',
+        pontos: 30
+      }
+    ];
+
+    // --- VARIÁVEIS DE ESTADO DO JOGO ---
+    let turmaSelecionadaId = 1;
+    let nomeJogador = '';
+    let perguntasAtuais = [];
+    let indiceAtual = 0;
+    let acertos = 0;
+    let pontosGanhos = 0;
+    let jaRespondeu = false;
+
+    // Renderiza as opções de turmas agrupadas no select da tela inicial
+    function renderizarOpcoesTurmas() {
+      const select = document.getElementById('select-turma');
+      const turmas = obterTurmas();
+      select.innerHTML = '';
+
+      const grupos = [
+        { rotulo: '1º Ano do Ensino Médio (A ao M)', turmas: turmas.filter(t => t.nome.startsWith('1°')) },
+        { rotulo: '2º Ano do Ensino Médio (A ao M)', turmas: turmas.filter(t => t.nome.startsWith('2°')) },
+        { rotulo: '3º Ano do Ensino Médio (A ao M)', turmas: turmas.filter(t => t.nome.startsWith('3°')) },
+        { rotulo: 'Participações Especiais', turmas: turmas.filter(t => !t.nome.match(/^[123]°/)) }
+      ];
+
+      grupos.forEach(grupo => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = grupo.rotulo;
+        grupo.turmas.forEach(turma => {
+          const opt = document.createElement('option');
+          opt.value = turma.id;
+          opt.textContent = `${turma.nome} — ${turma.curso} (${turma.pontos} XP)`;
+          optgroup.appendChild(opt);
+        });
+        select.appendChild(optgroup);
+      });
+    }
+
+    renderizarOpcoesTurmas();
+
+    // Evento: Submissão do Formulário Inicial (Quizz unificado sem filtro de tema)
+    document.getElementById('form-inicio').addEventListener('submit', function(e) {
+      e.preventDefault();
+      nomeJogador = document.getElementById('nome-aluno').value.trim();
+      const selectTurma = document.getElementById('select-turma');
+      turmaSelecionadaId = parseInt(selectTurma.value || '1');
+
+      // Sorteia 5 perguntas do banco completo unificado (Lógica + Matemática)
+      perguntasAtuais = BANCO_PERGUNTAS
+        .slice()
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 5);
+      indiceAtual = 0;
+      acertos = 0;
+      pontosGanhos = 0;
+
+      // Troca de tela
+      document.getElementById('tela-inicio').classList.add('hidden');
+      document.getElementById('tela-jogo').classList.remove('hidden');
+
+      const turmas = obterTurmas();
+      const turma = turmas.find(t => t.id === turmaSelecionadaId) || turmas[0];
+      document.getElementById('turma-ativa').innerText = turma.nome;
+
+      mostrarPergunta();
+    });
+
+    // Exibe a pergunta atual
+    function mostrarPergunta() {
+      jaRespondeu = false;
+      const pergunta = perguntasAtuais[indiceAtual];
+      const total = perguntasAtuais.length;
+
+      document.getElementById('numero-pergunta').innerText = indiceAtual + 1;
+      document.getElementById('total-perguntas').innerText = total;
+      document.getElementById('barra-progresso').style.width = `${((indiceAtual + 1) / total) * 100}%`;
+      document.getElementById('enunciado-pergunta').innerText = pergunta.enunciado;
+
+      // Oculta feedback e botão de avançar
+      document.getElementById('feedback-resposta').classList.add('hidden');
+      document.getElementById('btn-proxima').classList.add('hidden');
+
+      // Gera as 4 alternativas
+      const containerAlt = document.getElementById('container-alternativas');
+      containerAlt.innerHTML = '';
+
+      pergunta.alternativas.forEach(alt => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'w-full p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-left flex items-start gap-3 transition cursor-pointer text-slate-800';
+        btn.innerHTML = `
+          <span class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-xs text-slate-700 shrink-0">
+            ${alt.letra}
+          </span>
+          <span class="text-sm font-medium pt-0.5">${alt.texto}</span>
+        `;
+        btn.onclick = () => responderPergunta(alt.letra, btn);
+        containerAlt.appendChild(btn);
+      });
+    }
+
+    // Processa a resposta clicada
+    function responderPergunta(letraEscolhida, btnClicado) {
+      if (jaRespondeu) return;
+      jaRespondeu = true;
+
+      const pergunta = perguntasAtuais[indiceAtual];
+      const acertou = letraEscolhida === pergunta.resposta_correta;
+      const botoes = document.getElementById('container-alternativas').children;
+
+      // Destaca cores das alternativas
+      for (let btn of botoes) {
+        const letra = btn.querySelector('span').innerText.trim();
+        if (letra === pergunta.resposta_correta) {
+          btn.className = 'w-full p-3.5 rounded-xl border border-emerald-500 bg-emerald-50 text-left flex items-start gap-3 font-bold text-emerald-950';
+          btn.querySelector('span').className = 'w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0';
+        } else if (letra === letraEscolhida && !acertou) {
+          btn.className = 'w-full p-3.5 rounded-xl border border-rose-400 bg-rose-50 text-left flex items-start gap-3 text-rose-950 line-through';
+          btn.querySelector('span').className = 'w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0';
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      }
+
+      // Feedback explicativo
+      const boxFeedback = document.getElementById('feedback-resposta');
+      boxFeedback.classList.remove('hidden');
+
+      if (acertou) {
+        acertos++;
+        pontosGanhos += pergunta.pontos;
+        document.getElementById('feedback-titulo').innerText = '✅ Resposta certa! +30 Pontos';
+        document.getElementById('feedback-titulo').className = 'block text-sm font-bold text-emerald-700';
+      } else {
+        document.getElementById('feedback-titulo').innerText = '❌ Resposta incorreta!';
+        document.getElementById('feedback-titulo').className = 'block text-sm font-bold text-rose-700';
+      }
+      document.getElementById('feedback-explicacao').innerText = pergunta.explicacao;
+
+      // Mostra botão de próxima pergunta
+      const btnProxima = document.getElementById('btn-proxima');
+      btnProxima.classList.remove('hidden');
+      if (indiceAtual + 1 < perguntasAtuais.length) {
+        btnProxima.innerText = 'Próxima Pergunta ➔';
+      } else {
+        btnProxima.innerText = 'Finalizar Quizz e Ver Pontuação 🏆';
+      }
+    }
+
+    // Botão de Avanço
+    document.getElementById('btn-proxima').addEventListener('click', function() {
+      if (indiceAtual + 1 < perguntasAtuais.length) {
+        indiceAtual++;
+        mostrarPergunta();
+      } else {
+        finalizarQuizz();
+      }
+    });
+
+    // Finalizar Quizz e somar pontos da turma
+    function finalizarQuizz() {
+      document.getElementById('tela-jogo').classList.add('hidden');
+      document.getElementById('tela-resultado').classList.remove('hidden');
+
+      const turmas = obterTurmas();
+      const turma = turmas.find(t => t.id === turmaSelecionadaId);
+
+      // Atualiza os pontos da turma
+      if (turma && pontosGanhos > 0) {
+        turma.pontos += pontosGanhos;
+        salvarTurmas(turmas);
+      }
+
+      document.getElementById('resultado-aluno').innerText = `Parabéns, ${nomeJogador}!`;
+      document.getElementById('resultado-turma').innerText = turma ? turma.nome : 'Sua Turma';
+      document.getElementById('resultado-acertos').innerText = `${acertos} / ${perguntasAtuais.length}`;
+      document.getElementById('resultado-pontos').innerText = `+${pontosGanhos} XP`;
+
+      // Chuva de confetes
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      }
+    }
+
+    // Reiniciar para jogar novamente
+    document.getElementById('btn-jogar-novamente').addEventListener('click', function() {
+      document.getElementById('tela-resultado').classList.add('hidden');
+      document.getElementById('tela-inicio').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

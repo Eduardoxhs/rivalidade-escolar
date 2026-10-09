@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking das Turmas - Rivalidade Escolar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col">
+
+  <!-- ========================================== -->
+  <!-- 1. BARRA SUPERIOR (HEADER / NAVBAR)       -->
+  <!-- ========================================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      
+      <a href="index.html" class="flex items-center gap-2.5 cursor-pointer">
+        <div class="w-9 h-9 rounded-lg bg-orange-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+          🏆
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight text-slate-900">RIVALIDADE ESCOLAR</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-bold text-orange-700 bg-orange-100 rounded">EXPOCEEP 2026</span>
+          </div>
+          <p class="text-xs text-slate-500">Quizz entre Turmas do CEEP</p>
+        </div>
+      </a>
+
+      <!-- Menu de Navegação -->
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100">
+          🎯 Quizz
+        </a>
+        <a href="ranking.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-600 text-white">
+          🏆 Ranking
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. CONTEÚDO PRINCIPAL (MAIN)               -->
+  <!-- ========================================== -->
+  <main class="flex-1 py-8 px-4 max-w-2xl mx-auto w-full space-y-6">
+
+    <!-- Cabeçalho -->
+    <div class="text-center space-y-1">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Placar Geral das Turmas
+      </h1>
+      <p class="text-sm text-slate-600">
+        Cada quizz respondido soma pontos diretamente para a turma correspondente.
+      </p>
+    </div>
+
+    <!-- Pódio dos 3 Primeiros -->
+    <div id="podio-turmas" class="grid grid-cols-3 gap-2 sm:gap-3 pt-2">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+
+    <!-- Lista Completa das Turmas -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-5 py-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-600">
+          Classificação das Turmas
+        </span>
+        <span id="total-turmas-texto" class="text-xs text-slate-500">6 turmas no CEEP</span>
+      </div>
+
+      <div id="tabela-turmas" class="divide-y divide-slate-100">
+        <!-- Linhas geradas via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Ações Inferiores -->
+    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+      <a 
+        href="index.html" 
+        class="flex-1 py-3 px-4 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-sm transition text-center"
+      >
+        🎯 Jogar Quizz para Somar Mais Pontos
+      </a>
+
+      <button 
+        id="btn-resetar" 
+        class="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer border border-slate-200"
+        title="Opções para resetar ou zerar pontos"
+      >
+        🔄 Resetar Pontos
+      </button>
+    </div>
+
+    <!-- Notificação de Sucesso -->
+    <div id="notificacao-sucesso" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-semibold flex items-center justify-between shadow-xs">
+      <span id="texto-notificacao">Pontuações redefinidas com sucesso!</span>
+      <button onclick="document.getElementById('notificacao-sucesso').classList.add('hidden')" class="text-emerald-700 font-bold px-2 py-0.5 cursor-pointer">✕</button>
+    </div>
+
+    <!-- Modal de Confirmação de Reset -->
+    <div id="modal-reset" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+      <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0 font-bold">
+              🔄
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900">Resetar Pontuação das Turmas</h3>
+              <p class="text-xs text-slate-500">Como você deseja redefinir o placar da EXPOCEEP?</p>
+            </div>
+          </div>
+          <button id="btn-fechar-modal" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-lg">✕</button>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <!-- Opção 1: Zerar Tudo (0 XP) -->
+          <button id="btn-zerar-tudo" class="w-full p-3.5 rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-100/70 text-left transition flex items-center justify-between group cursor-pointer">
+            <div class="pr-2">
+              <span class="block font-bold text-sm text-rose-950">⚠️ Zerar todos os pontos (0 XP)</span>
+              <span class="block text-xs text-rose-700 mt-0.5">Deixa todas as turmas com 0 pontos para nova competição.</span>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-600 text-white shrink-0 shadow-xs">0 XP</span>
+          </button>
+
+          <!-- Opção 2: Restaurar Padrão -->
+          <button id="btn-restaurar-padrao" class="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100/90 text-left transition flex items-center justify-between group cursor-pointer">
+            <div class="pr-2">
+              <span class="block font-bold text-sm text-slate-900">🔄 Restaurar pontos iniciais padrão</span>
+              <span class="block text-xs text-slate-500 mt-0.5">Volta aos valores de teste originais (3°M 1200 XP, 3°A 950 XP, etc.).</span>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 shrink-0">Padrão</span>
+          </button>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button id="btn-cancelar-modal" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. RODAPÉ (FOOTER)                         -->
+  <!-- ========================================== -->
+  <footer class="mt-auto py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto px-4 space-y-1">
+      <p class="font-semibold text-slate-700">🏆 Rivalidade Escolar — Plataforma de Quizz entre Turmas</p>
+      <p>Projeto Integrador • EXPOCEEP 2026 • CEEP Pedro Boaretto Neto • Cascavel - PR</p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 4. SCRIPT JAVASCRIPT (LÓGICA DO RANKING)   -->
+  <!-- ========================================== -->
+  <script>
+    const TURMAS_PADRAO = [
+      // 1º Ano (A ao M)
+      { id: 1, nome: '1°A', curso: '1º Ano do Ensino Médio', pontos: 420 },
+      { id: 2, nome: '1°B', curso: '1º Ano do Ensino Médio', pontos: 310 },
+      { id: 3, nome: '1°C', curso: '1º Ano do Ensino Médio', pontos: 260 },
+      { id: 4, nome: '1°D', curso: '1º Ano do Ensino Médio', pontos: 180 },
+      { id: 5, nome: '1°E', curso: '1º Ano do Ensino Médio', pontos: 240 },
+      { id: 6, nome: '1°F', curso: '1º Ano do Ensino Médio', pontos: 150 },
+      { id: 7, nome: '1°G', curso: '1º Ano do Ensino Médio', pontos: 200 },
+      { id: 8, nome: '1°H', curso: '1º Ano do Ensino Médio', pontos: 170 },
+      { id: 9, nome: '1°I', curso: '1º Ano do Ensino Médio', pontos: 130 },
+      { id: 10, nome: '1°J', curso: '1º Ano do Ensino Médio', pontos: 190 },
+      { id: 11, nome: '1°K', curso: '1º Ano do Ensino Médio', pontos: 160 },
+      { id: 12, nome: '1°L', curso: '1º Ano do Ensino Médio', pontos: 140 },
+      { id: 13, nome: '1°M', curso: '1º Ano do Ensino Médio', pontos: 380 },
+      // 2º Ano (A ao M)
+      { id: 14, nome: '2°A', curso: '2º Ano do Ensino Médio', pontos: 540 },
+      { id: 15, nome: '2°B', curso: '2º Ano do Ensino Médio', pontos: 470 },
+      { id: 16, nome: '2°C', curso: '2º Ano do Ensino Médio', pontos: 390 },
+      { id: 17, nome: '2°D', curso: '2º Ano do Ensino Médio', pontos: 330 },
+      { id: 18, nome: '2°E', curso: '2º Ano do Ensino Médio', pontos: 410 },
+      { id: 19, nome: '2°F', curso: '2º Ano do Ensino Médio', pontos: 290 },
+      { id: 20, nome: '2°G', curso: '2º Ano do Ensino Médio', pontos: 360 },
+      { id: 21, nome: '2°H', curso: '2º Ano do Ensino Médio', pontos: 310 },
+      { id: 22, nome: '2°I', curso: '2º Ano do Ensino Médio', pontos: 270 },
+      { id: 23, nome: '2°J', curso: '2º Ano do Ensino Médio', pontos: 350 },
+      { id: 24, nome: '2°K', curso: '2º Ano do Ensino Médio', pontos: 300 },
+      { id: 25, nome: '2°L', curso: '2º Ano do Ensino Médio', pontos: 280 },
+      { id: 26, nome: '2°M', curso: '2º Ano do Ensino Médio', pontos: 680 },
+      // 3º Ano (A ao M)
+      { id: 27, nome: '3°A', curso: '3º Ano do Ensino Médio', pontos: 950 },
+      { id: 28, nome: '3°B', curso: '3º Ano do Ensino Médio', pontos: 820 },
+      { id: 29, nome: '3°C', curso: '3º Ano do Ensino Médio', pontos: 610 },
+      { id: 30, nome: '3°D', curso: '3º Ano do Ensino Médio', pontos: 530 },
+      { id: 31, nome: '3°E', curso: '3º Ano do Ensino Médio', pontos: 670 },
+      { id: 32, nome: '3°F', curso: '3º Ano do Ensino Médio', pontos: 490 },
+      { id: 33, nome: '3°G', curso: '3º Ano do Ensino Médio', pontos: 580 },
+      { id: 34, nome: '3°H', curso: '3º Ano do Ensino Médio', pontos: 520 },
+      { id: 35, nome: '3°I', curso: '3º Ano do Ensino Médio', pontos: 450 },
+      { id: 36, nome: '3°J', curso: '3º Ano do Ensino Médio', pontos: 600 },
+      { id: 37, nome: '3°K', curso: '3º Ano do Ensino Médio', pontos: 480 },
+      { id: 38, nome: '3°L', curso: '3º Ano do Ensino Médio', pontos: 460 },
+      { id: 39, nome: '3°M', curso: '3º Ano do Ensino Médio', pontos: 1200 },
+      // Especiais
+      { id: 40, nome: 'Visitantes', curso: 'Comunidade & Convidados da EXPOCEEP', pontos: 510 },
+      { id: 41, nome: 'Avaliador', curso: 'Banca Avaliadora & Professores', pontos: 730 }
+    ];
+
+    function obterTurmas() {
+      const salvo = localStorage.getItem('rivalidade_turmas_v2');
+      if (salvo) {
+        try { 
+          const parsed = JSON.parse(salvo);
+          if (Array.isArray(parsed) && parsed.length === TURMAS_PADRAO.length) return parsed;
+        } catch(e) {}
+      }
+      return TURMAS_PADRAO;
+    }
+
+    function salvarTurmas(turmas) {
+      localStorage.setItem('rivalidade_turmas_v2', JSON.stringify(turmas));
+    }
+
+    function renderizarRanking() {
+      const turmas = obterTurmas();
+      // Ordena decrescente por pontos
+      turmas.sort((a, b) => b.pontos - a.pontos);
+      const pontuacaoMaxima = turmas[0]?.pontos || 1000;
+
+      // 1. Pódio (Top 3)
+      const podioEl = document.getElementById('podio-turmas');
+      if (turmas.length >= 3) {
+        podioEl.innerHTML = `
+          <!-- 2º Lugar -->
+          <div class="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 text-center flex flex-col justify-end items-center shadow-sm">
+            <span class="text-2xl mb-1">🥈</span>
+            <span class="text-[11px] font-bold uppercase text-slate-400">2º Lugar</span>
+            <span class="text-base sm:text-lg font-extrabold text-slate-900">${turmas[1].nome}</span>
+            <span class="text-xs font-bold text-slate-600 mt-1">${turmas[1].pontos} XP</span>
+          </div>
+
+          <!-- 1º Lugar (Destaque) -->
+          <div class="bg-amber-50 rounded-2xl p-3 sm:p-5 border-2 border-amber-300 text-center flex flex-col justify-end items-center shadow-sm relative -top-2">
+            <span class="text-3xl mb-1">👑</span>
+            <span class="text-xs font-bold uppercase text-amber-700">1º Lugar</span>
+            <span class="text-lg sm:text-xl font-black text-slate-900">${turmas[0].nome}</span>
+            <span class="text-sm font-extrabold text-amber-800 mt-1">${turmas[0].pontos} XP</span>
+          </div>
+
+          <!-- 3º Lugar -->
+          <div class="bg-white rounded-2xl p-3 sm:p-4 border border-slate-200 text-center flex flex-col justify-end items-center shadow-sm">
+            <span class="text-2xl mb-1">🥉</span>
+            <span class="text-[11px] font-bold uppercase text-amber-700">3º Lugar</span>
+            <span class="text-base sm:text-lg font-extrabold text-slate-900">${turmas[2].nome}</span>
+            <span class="text-xs font-bold text-slate-600 mt-1">${turmas[2].pontos} XP</span>
+          </div>
+        `;
+      }
+
+      // 2. Lista completa
+      const tabelaEl = document.getElementById('tabela-turmas');
+      tabelaEl.innerHTML = '';
+
+      turmas.forEach((turma, index) => {
+        const posicao = index + 1;
+        const porcentagem = Math.round((turma.pontos / pontuacaoMaxima) * 100);
+
+        const row = document.createElement('div');
+        row.className = 'px-4 sm:px-5 py-3.5 flex items-center gap-3 sm:gap-4 hover:bg-slate-50 transition';
+        row.innerHTML = `
+          <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+            posicao === 1 ? 'bg-amber-100 text-amber-800 font-extrabold' :
+            posicao === 2 ? 'bg-slate-200 text-slate-700' :
+            posicao === 3 ? 'bg-amber-50 text-amber-900' : 'bg-slate-100 text-slate-600'
+          }">
+            ${posicao}º
+          </span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-slate-900 text-sm truncate">${turma.nome}</span>
+              <span class="font-extrabold text-sm text-slate-900 shrink-0">${turma.pontos} XP</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-500 rounded-full" style="width: ${porcentagem}%"></div>
+              </div>
+              <span class="text-[11px] text-slate-400 shrink-0 truncate max-w-[120px] sm:max-w-none">
+                ${turma.curso}
+              </span>
+            </div>
+          </div>
+        `;
+        tabelaEl.appendChild(row);
+      });
+    }
+
+    renderizarRanking();
+
+    // Controle do Modal de Reset
+    const modalReset = document.getElementById('modal-reset');
+    const notificacaoEl = document.getElementById('notificacao-sucesso');
+    const textoNotificacao = document.getElementById('texto-notificacao');
+
+    function exibirNotificacao(texto) {
+      textoNotificacao.innerText = texto;
+      notificacaoEl.classList.remove('hidden');
+      setTimeout(() => {
+        notificacaoEl.classList.add('hidden');
+      }, 4000);
+    }
+
+    function fecharModal() {
+      modalReset.classList.add('hidden');
+    }
+
+    document.getElementById('btn-resetar').addEventListener('click', function() {
+      modalReset.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-fechar-modal').addEventListener('click', fecharModal);
+    document.getElementById('btn-cancelar-modal').addEventListener('click', fecharModal);
+
+    modalReset.addEventListener('click', function(e) {
+      if (e.target === modalReset) {
+        fecharModal();
+      }
+    });
+
+    // Opção 1: Zerar tudo (0 XP)
+    document.getElementById('btn-zerar-tudo').addEventListener('click', function() {
+      const turmas = obterTurmas();
+      const zeradas = turmas.map(t => ({ ...t, pontos: 0 }));
+      salvarTurmas(zeradas);
+      fecharModal();
+      renderizarRanking();
+      exibirNotificacao('Placar zerado! Todas as turmas agora estão com 0 XP.');
+    });
+
+    // Opção 2: Restaurar Padrão
+    document.getElementById('btn-restaurar-padrao').addEventListener('click', function() {
+      localStorage.removeItem('rivalidade_turmas_v2');
+      fecharModal();
+      renderizarRanking();
+      exibirNotificacao('Pontuações padrão do CEEP restauradas com sucesso!');
+    });
+  </script>
+</body>
+</html>

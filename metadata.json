@@ -1,0 +1,6 @@
+{
+  "name": "Rivalidade Escolar",
+  "description": "Plataforma web de competição e quizzes entre turmas para a EXPOCEEP 2026 do CEEP Pedro Boaretto Neto.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
